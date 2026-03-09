@@ -1,34 +1,34 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field #type: ignore
 from datetime import datetime
 from typing import Optional
 from .category import CategoryResponse
 
-class ProjectBase(BaseModel):
+class ProductBase(BaseModel):
     name: str = Field(..., min_length= 1, max_length = 100,
-                      description = "Project name")
-    description : Optional[str] = Field(None, description ="Project description")
-    school_obj : str = Field(..., min_length = 3, max_length = 20, description = "School object")
+                      description = "Product name")
+    description : Optional[str] = Field(None, description ="Product description")
+    price : float = Field(..., gt= 0,description = "Product price(must be greater than 0)")
 
-    category_id : int = Field(...,description = "Categoey ID")
-    image_url : Optional[str] = Field(None, description = "Project image URL")
+    category_id : int = Field(...,description = "Category ID")
+    image_url : Optional[str] = Field(None, description = "Product image URL")
 
-    class ProjectCreate(ProjectBase):
-        pass
+class ProductCreate(ProductBase):
+    pass
 
-    class ProjectResponse(BaseModel):
-        id : int = Field(..., decription = "Unique project ID")
-        name :str
-        description: Optional[str]
-        school_obj: str
-        category_id : int
-        image_url: Optional[str]
-        created_at: datetime
-        category: CategoryResponse = Field(..., description = "Project category details")
+class ProductResponse(BaseModel):
+    id : int = Field(..., decription = "Unique product ID")
+    name :str
+    description: Optional[str]
+    price: float
+    category_id : int
+    image_url: Optional[str]
+    created_at: datetime
+    category: CategoryResponse = Field(..., description = "Product category details")
 
-        class Config:
-            form_attributes = True
+    class Config:
+        form_attributes = True
 
-    class ProjectListResponse(BaseModel):
-        projects: list[ProjectResponse]
-        total: int = Field(..., description = "Total number of projects")
+class ProductListResponse(BaseModel):
+    producst: list[ProductResponse]
+    total: int = Field(..., description = "Total number of products")
 
